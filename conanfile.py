@@ -4,6 +4,7 @@
 from conans import ConanFile, CMake, tools
 import os
 
+
 def sort_libs(correct_order, libs, lib_suffix='', reverse_result=False):
     # Add suffix for correct string matching
     correct_order[:] = [s.__add__(lib_suffix) for s in correct_order]
@@ -20,12 +21,12 @@ def sort_libs(correct_order, libs, lib_suffix='', reverse_result=False):
 
     return result
 
+
 class LibnameConan(ConanFile):
     name = "magnum"
-    version = "2018.10"
-    description =   "Magnum — Lightweight and modular C++11/C++14 \
+    version = "2019.01"
+    description = "Magnum — Lightweight and modular C++11/C++14 \
                     graphics middleware for games and data visualization"
-    # topics can get used for searches, GitHub topics, Bintray tags etc. Add here keywords about the library
     topics = ("conan", "corrade", "graphics", "rendering", "3d", "2d", "opengl")
     url = "https://github.com/helmesjo/conan-magnum"
     homepage = "https://magnum.graphics"
@@ -36,10 +37,9 @@ class LibnameConan(ConanFile):
     generators = "cmake"
     short_paths = True  # Some folders go out of the 260 chars path length scope (windows)
 
-    # Options may need to change depending on the packaged library.
     settings = "os", "arch", "compiler", "build_type"
     options = {
-        "shared": [True, False], 
+        "shared": [True, False],
         "fPIC": [True, False],
         "build_deprecated": [True, False],
         "build_multithreaded": [True, False],
@@ -79,7 +79,7 @@ class LibnameConan(ConanFile):
         "with_xeglapplication": [True, False],
     }
     default_options = {
-        "shared": False, 
+        "shared": False,
         "fPIC": True,
         "build_deprecated": True,
         "build_multithreaded": True,
@@ -124,7 +124,7 @@ class LibnameConan(ConanFile):
     _build_subfolder = "build_subfolder"
 
     requires = (
-        "corrade/2018.10@helmesjo/stable"
+        "corrade/2019.01@magnum/stable"
     )
 
     def system_package_architecture(self):
@@ -210,7 +210,7 @@ class LibnameConan(ConanFile):
         def add_cmake_option(option, value):
             var_name = "{}".format(option).upper()
             value_str = "{}".format(value)
-            var_value = "ON" if value_str == 'True' else "OFF" if value_str == 'False' else value_str 
+            var_value = "ON" if value_str == 'True' else "OFF" if value_str == 'False' else value_str
             cmake.definitions[var_name] = var_value
 
         for option, value in self.options.items():
@@ -239,17 +239,17 @@ class LibnameConan(ConanFile):
     def package_info(self):
         # See dependency order here: https://doc.magnum.graphics/magnum/custom-buildsystems.html
         allLibs = [
-            #1
+            # 1
             "Magnum",
             "MagnumAnimation",
             "MagnumMath",
-            #2
+            # 2
             "MagnumAudio",
             "MagnumGL",
             "MagnumSceneGraph",
             "MagnumTrade",
             "MagnumVk",
-            #3
+            # 3
             "MagnumMeshTools",
             "MagnumPrimitives",
             "MagnumShaders",
@@ -261,12 +261,12 @@ class LibnameConan(ConanFile):
             "MagnumWindowlessGlxApplication",
             "MagnumSdl2Application",
             "MagnumWindowlessSdl2Application",
-            #4
+            # 4
             "MagnumDebugTools",
             "MagnumOpenGLTester",
             "MagnumText",
         ]
-        
+
         # Sort all built libs according to above, and reverse result for correct link order
         suffix = '-d' if self.settings.build_type == "Debug" else ''
         builtLibs = tools.collect_libs(self)
